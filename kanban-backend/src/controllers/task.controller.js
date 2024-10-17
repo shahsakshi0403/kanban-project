@@ -41,7 +41,7 @@ class TaskController {
       const taskData = {
         ...req.body,
         ownerId: ownerId,
-        status: "inProgress",
+        status: "open",
       };
 
       const newtask = await addTask(taskData);

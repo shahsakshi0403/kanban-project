@@ -6,6 +6,8 @@ import {
   Validation,
 } from "../validation/user.validation.js";
 import { addNewUser, login } from "../controllers/user.controller.js";
+import { authMiddleware } from "../middleware/auth.js";
+import { User } from "../models/user.js";
 
 const router = Router();
 
@@ -38,18 +40,13 @@ router.get(
 );
 
 // Logout route
-router.get("/logout", (req, res) => {
-  // req.logout();
-  // res.redirect(process.env.REACT_APP_URL);
-
-  req.logout((err) => {
-    if (err) {
-      return res.status(500).json({
-        error: true,
-        message: "Logout failed",
-      });
-    }
-    res.redirect(process.env.REACT_APP_URL ?? "http://localhost:3000");
+router.get("/logout", authMiddleware, async (req, res) => {
+  const userId = Number(req.param.id);
+  // Nullify the user's token in the database
+  const data = await User.update({ token: null }, { where: { id: userId } });
+  return res.status(200).json({
+    error: false,
+    message: "Logout succesfully",
   });
 });
 
