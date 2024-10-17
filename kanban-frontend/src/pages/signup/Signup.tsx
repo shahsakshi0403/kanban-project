@@ -46,12 +46,15 @@ const SignupPage = () => {
   return (
     <Box
       sx={{
-        width: "50%",
-        padding: "5rem",
+        width: "400px",
+        padding: "2rem",
         boxShadow: 3,
         bgcolor: "background.paper",
-        justifyContent: "center",
-        alignItems: "center",
+        borderRadius: "8px",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
       }}
     >
       <h2>Sign Up</h2>

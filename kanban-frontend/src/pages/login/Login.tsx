@@ -28,10 +28,10 @@ const LoginPage = () => {
     onSubmit: async (values: Login) => {
       try {
         const res: any = await dispatch(loginUser(values));
-  
+
         //navigate to task page
-        if(!res.error) {
-          navigate('/tasks');
+        if (!res.error) {
+          navigate("/tasks");
         } else {
           setIsError(true);
         }
@@ -52,12 +52,15 @@ const LoginPage = () => {
   return (
     <Box
       sx={{
-        width: "50%",
+        width: "400px",
         padding: "2rem",
         boxShadow: 3,
         bgcolor: "background.paper",
-        justifyContent: "center",
-        alignItems: "center",
+        borderRadius: "8px",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
       }}
     >
       <h2>Login</h2>
@@ -92,7 +95,12 @@ const LoginPage = () => {
           sx={{ mb: 2 }}
         />
 
-        <Button variant="contained" color="primary" type="submit" sx={{ width: '100%'}}>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          sx={{ width: "100%" }}
+        >
           Login
         </Button>
       </form>
@@ -100,7 +108,10 @@ const LoginPage = () => {
       <div style={{ marginTop: "16px", textAlign: "center" }}>
         <p>
           Don't have an account?. Create new one{" "}
-          <Link to="/signup" style={{ color: "blue", textDecoration: "underline" }}>
+          <Link
+            to="/signup"
+            style={{ color: "blue", textDecoration: "underline" }}
+          >
             Register
           </Link>
         </p>
