@@ -7,6 +7,7 @@ import { Login } from "./types/types";
 import { useAppDispatch } from "../../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { getTasks } from "../tasks/action/action";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -31,6 +32,7 @@ const LoginPage = () => {
 
         //navigate to task page
         if (!res.error) {
+          await dispatch(getTasks());
           navigate("/tasks");
         } else {
           setIsError(true);
