@@ -1,68 +1,75 @@
-import { GoogleLogin } from "@react-oauth/google";
 import { TextField, Button, Box, Snackbar } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { loginUser } from "./action/action";
-import { Login } from "./types/types";
 import { useAppDispatch } from "../../redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../login/action/action";
 import { useState } from "react";
 
-const LoginPage = () => {
+const SignupPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [isError, setIsError] = useState<boolean>(false);
 
-  // Formik setup for handling email and password form
+  // Formik setup for handling signup form
   const formik = useFormik({
     initialValues: {
+      name: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
+      name: Yup.string().required("Username is required"),
       email: Yup.string()
         .email("Invalid email format")
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: async (values: Login) => {
+    onSubmit: async (values) => {
       try {
-        const res: any = await dispatch(loginUser(values));
-  
-        //navigate to task page
-        if(!res.error) {
-          navigate('/tasks');
+        const res: any = await dispatch(registerUser(values));
+
+        if (!res.error) {
+          navigate("/");
         } else {
           setIsError(true);
         }
       } catch (error: any) {
-        console.error("Login Failed:", error.response?.data || error.message);
+        console.error(
+          "Registration Failed:",
+          error.response?.data || error.message
+        );
       }
     },
   });
-
-  const responseMessage = (response: any) => {
-    console.log("Google OAuth Success:", response);
-  };
-
-  const errorMessage = (error: any) => {
-    console.error("Google OAuth Error:", error);
-  };
 
   return (
     <Box
       sx={{
         width: "50%",
-        padding: "2rem",
+        padding: "5rem",
         boxShadow: 3,
         bgcolor: "background.paper",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <h2>Login</h2>
-      {/* Formik form for email and password */}
+      <h2>Sign Up</h2>
       <form onSubmit={formik.handleSubmit}>
+        <TextField
+          fullWidth
+          id="name"
+          name="name"
+          label="Username"
+          variant="outlined"
+          value={formik.values.name}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
+          sx={{ mb: 2 }}
+        />
+
         <TextField
           fullWidth
           id="email"
@@ -92,22 +99,24 @@ const LoginPage = () => {
           sx={{ mb: 2 }}
         />
 
-        <Button variant="contained" color="primary" type="submit" sx={{ width: '100%'}}>
-          Login
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          sx={{ width: "100%" }}
+        >
+          Sign Up
         </Button>
       </form>
 
       <div style={{ marginTop: "16px", textAlign: "center" }}>
         <p>
-          Don't have an account?. Create new one{" "}
-          <Link to="/signup" style={{ color: "blue", textDecoration: "underline" }}>
-            Register
+          Already have an account?{" "}
+          <Link to="/" style={{ color: "blue", textDecoration: "underline" }}>
+            Login
           </Link>
         </p>
       </div>
-
-      <p>OR</p>
-      <GoogleLogin onSuccess={responseMessage} onError={() => errorMessage} />
 
       <Snackbar
         open={isError}
@@ -119,4 +128,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;
