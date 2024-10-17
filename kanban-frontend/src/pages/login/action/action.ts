@@ -1,8 +1,11 @@
 // src/redux/auth/authActions.ts
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { LOGIN, REGISTER } from "../../../constants/constant";
+import { LOGIN, LOGOUT, REGISTER } from "../../../constants/constant";
 import { Login, Register } from "../types/types";
+
+// Retrieve token from local storage
+const token = localStorage.getItem("token");
 
 // Async thunk for login API call
 export const loginUser = createAsyncThunk(
@@ -35,3 +38,23 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
+// Define the logout action
+export const logout = createAsyncThunk(LOGOUT, async () => {
+  // Make API call to logout
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}/auth/logout`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`, // Set the Authorization header
+      },
+    }
+  );
+
+  // Check response validity
+  if (response.status !== 200) {
+    throw new Error("Logout failed");
+  }
+
+  return {}; // You can return any value if needed
+});
